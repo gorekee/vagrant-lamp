@@ -6,6 +6,9 @@ Vagrant::Config.run do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
+  # Forward MySql port on 33066, used for connecting admin-clients to localhost:33066
+  config.vm.forward_port 3306, 33066
+
   # Assign this VM to a host-only network IP, allowing you to access it via the IP.
   config.vm.network :hostonly, "33.33.33.10"
   
