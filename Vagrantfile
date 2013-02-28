@@ -12,6 +12,8 @@ Vagrant::Config.run do |config|
   config.vbguest.auto_update = true
   config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
   config.vm.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+  
+  config.vm.share_folder "v-root", "/vagrant", ".", :owner=> 'vagrant', :group=>'www-data', :extra => 'dmode=775,fmode=664'
 
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
   # to this Vagrantfile), and adding some recipes and/or roles.
