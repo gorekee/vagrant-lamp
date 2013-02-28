@@ -20,6 +20,9 @@ Vagrantfile).
 
 Clone this repository
 
+Install [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) which 
+automatically installs the host's VirtualBox Guest Additions on the guest system
+
 Go to the repository folder and launch the box
 
     $ cd [repo]
