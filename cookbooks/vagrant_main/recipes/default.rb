@@ -1,12 +1,29 @@
 include_recipe "apt"
+include_recipe "openssl"
+include_recipe "networking_basic"
+
 include_recipe "git"
 include_recipe "oh-my-zsh"
+
+include_recipe "php"
+
 include_recipe "apache2"
 include_recipe "apache2::mod_rewrite"
 include_recipe "apache2::mod_ssl"
-include_recipe "mysql::server"
-include_recipe "php"
 include_recipe "apache2::mod_php5"
+
+include_recipe "mysql::server"
+
+package "php5-curl"
+package "php-apc"
+package "php5-xsl"
+package "php5-gd"
+package "php5-intl"
+package "php5-mcrypt"
+package "php5-mysql"
+package "php5-imagick"
+package "php5-tidy"
+package "php5-xmlrpc"
 
 # Install packages
 %w{ debconf vim screen mc subversion curl tmux make g++ libsqlite3-dev graphviz }.each do |a_package|
@@ -100,11 +117,6 @@ template "/var/www/webgrind/config.php" do
   action :create
 end
 
-# Install php-curl
-package "php5-curl" do
-  action :install
-end
-
 # Get eth1 ip
 eth1_ip = node[:network][:interfaces][:eth1][:addresses].select{|key,val| val[:family] == 'inet'}.flatten[0]
 
@@ -133,4 +145,25 @@ bash "composer" do
     curl -s https://getcomposer.org/installer | php
     sudo mv composer.phar /usr/local/bin/composer
   EOH
+end
+
+# install PHPUnit
+execute "pear-discover" do
+  command "sudo pear config-set auto_discover 1"
+  action :run
+end
+execute "discover phpunit" do
+  command "pear channel-discover pear.phpunit.de"
+  action :run
+  not_if "which phpunit"
+end
+# upgrade pear
+# execute "pear-upgrade" do
+#   command "sudo pear upgrade pear"
+#   action :run
+# end
+execute "phpunit" do
+  command "sudo pear install --force --alldeps phpunit/phpunit"
+  action :run
+  not_if "which phpunit"
 end
